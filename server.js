@@ -19,7 +19,7 @@ const io = socketIO(server);
 
 io.on("connection",(socket)=>{
 	console.log("Connected");
-})
+});
 
 
 // Set Views
