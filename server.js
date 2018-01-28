@@ -30,7 +30,7 @@ app.set("view engine","ejs");
 
 // MongoDb Connection
 
-mongoose.connect('mongodb://localhost:27017/codart_3',{useMongoClient:true},(err,db)=>{
+mongoose.connect('mongodb://localhost:27017/codart_3',(err,db)=>{
 	if(err){
 		console.log("Error Connecting To MongoDb");
 		process.exit(1);
