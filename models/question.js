@@ -2,15 +2,21 @@ const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
 const model = new schema({
+	qnum:{
+		type:'number',
+	},
 	stmt:{
 		type:'string',
 	},
-	input:{
+	inputf:{
 		type:'string'
 	},
-	output:{
+	outputf:{
 		type:'string'
 	},
+	testoutput:{
+		type:'string',
+	},	
 	sinput:{
 		type:'string',
 	},
@@ -22,6 +28,9 @@ const model = new schema({
 	},
 	diff:{
 		type:'number'
+	},
+	testcase:{
+		type:'string'
 	}
 });
 

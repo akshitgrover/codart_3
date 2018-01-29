@@ -32,6 +32,14 @@ const model = new schema({
 	hardi:{
 		type:'number',
 		default:1
+	},
+	cdiff:{
+		type:'number',
+		default:0
+	},
+	cqnum:{
+		type:'number',
+		default:0
 	}
 });
 
