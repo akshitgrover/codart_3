@@ -14,6 +14,10 @@ const model = new schema({
 		type:'number',
 		default:0
 	},
+	submissionc:{
+		type:'object',
+		default:{},
+	},
 	submissions:{
 		type:'array',
 		default:[]
@@ -41,6 +45,7 @@ const model = new schema({
 		type:'number',
 		default:0
 	}
-});
+},{minimize:false}
+);
 
 module.exports = mongoose.model('user',model);

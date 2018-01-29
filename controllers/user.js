@@ -67,15 +67,26 @@ router.post('/post',verfiyToken,(req,res)=>{
 			diffStr = 'H';
 		}
 
-		// Save Submission Into Array:
-
-		data.submissions.push(data.cqnum.toString() + diffStr);
-
 		// Question Handler: 
 
 		Question.findOne({qnum:data.cqnum,diff:data.cdiff},(err,que)=>{
 			if(err){
 				return res.status(400).json({err:"Bad Request, Error Occured"});
+			}
+
+			// Save Submission Into Array:
+
+			const extname = path.extname(req.files.code.path);
+			const pathFile = uploadPath + '/' + data.username + '_' + que.qnum.toString() + diffStr + '_' + (new Date()).getTime() + extname;
+			data.submissions.push(pathFile);
+			if(!data.submissionc[que.qnum.toString() + diffStr.toString()]){
+				data.submissionc[que.qnum.toString() + diffStr.toString()] = 1;
+				console.log(data.submissionc);
+				data.markModified('submissionc');
+			}
+			else{
+				data.submissionc[que.qnum.toString() + diffStr.toString()] += 1;
+				data.markModified('submissionc');
 			}
 
 			// Read Testcases: 
@@ -89,8 +100,6 @@ router.post('/post',verfiyToken,(req,res)=>{
 
 			// Save Uploaded File In Directory:
 
-			const extname = path.extname(req.files.code.path);
-			const pathFile = uploadPath + '/' + data.username + '_' + que.qnum.toString() + diffStr + '_' + (new Date()).getTime() + extname;
 			fs.rename(req.files.code.path,pathFile,(err)=>{
 				if(err){
 					console.log(err);
@@ -136,11 +145,15 @@ router.post('/post',verfiyToken,(req,res)=>{
 					console.log(body.result.stdout);
 					if(body.result.stdout == null){
 						data.save();
+						return res.status(200).json({msg:"Compilation Error"});
+					}
+					else if(body.result.stdout != que.testoutput){
+						data.save();
 						return res.status(200).json({msg:"Wrong Answer"});
 					}
 					else if(body.result.stdout[0] == que.testoutput){
 						data.score += 1;
-						data.csubmissions.push(que.qnum + diffStr);
+						data.csubmissions.push(pathFile);
 						if(data.cdiff == 0 && data.cqnum == 0){
 							data.cqnum = 1;
 							data.save();
