@@ -34,7 +34,7 @@ router.post('/login',(req,res)=>{
 			return res.status(401).json({err:"Invalid Username/Password"});
 		
 		};	
-		return res.status(200).json({msg:"Logged In",token:jwt.issuToken({id:"admin"},secret,"1d")});
+		return res.status(200).json({msg:"Logged In",token:jwt.issueToken({id:"admin"},secret,"1d")});
 
 	});
 

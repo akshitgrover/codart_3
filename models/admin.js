@@ -1,4 +1,4 @@
-const mongoose = requris('mongoose');
+const mongoose = require('mongoose');
 const schema = mongoose.Schema;
 
 const model = new schema({
