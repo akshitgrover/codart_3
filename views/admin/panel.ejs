@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+	
+	<head>
+		<title>Admin Panel</title>
+		<script src = "/js/bootstrap.min.js"></script>
+		<link href="/css/bootstrap-grid.min.css" rel = "stylesheet">
+		<link href="/css/bootstrap-reboot.min.css" rel = "stylesheet">
+		<link href="/css/bootstrap.min.css" rel = "stylesheet">
+		<style>
+			input{
+				border-radius:5%;
+				border:2px solid grey;
+				width:500px
+			}
+			button{
+				border-radius:5%;
+				border:2px solid grey;
+				width:500px
+			}
+			textarea{
+				border-radius:5%;
+				border:2px solid grey;
+				width:500px
+			}
+		</style>
+	</head>
+	<body style="background-color:#47C5AE">
+		<div class="container" style="margin-top:25px">
+			<div class="jumbotron">
+			<center>
+			<h1>Add A Question</h1><br>
+				<form action="/question/create" method="post" target= "_blank" enctype="multipart/form-data">
+					<input type="text" name="qnum" placeholder="Number"><br><br>
+					<input type="text" name="diff" placeholder="Difficulty"><br><br>
+					<textarea name="stmt" placeholder="Statement"></textarea><br><br>
+					<textarea name="cnstr" placeholder="Constraints"></textarea><br><br>
+					<textarea name="inputf" placeholder="Input Format"></textarea><br><br>
+					<textarea type="text" name="outputf" placeholder="Output Format"></textarea><br><br>
+					<textarea name="sinput" placeholder="Sample Input"></textarea><br><br>
+					<textarea name="soutput" placeholder="Sample Output"></textarea><br><br>
+					<textarea name="expln" placeholder="Explanation"></textarea><br><br>
+					<input type="file" name="testcase">
+					<input type="hidden" name= "token" value="<%=token%>">
+					<input type="submit">
+				</form>
+				<div id="msg" style="color:red;font-weight:bold;font-size:50px;align:center">
+
+				</div>
+			<h1 style="margin-top:25px">Give Question</h1><br>
+				<form>
+					<input type="text" id="username" placeholder="Username">
+					<input type="text" id="diff" placeholder="Diffculty"><br><br>
+				</form>
+					<button onclick="givequestion()">Send</button>
+				<br><br><hr style="background-color:grey;border:1px dashed black"><br>
+				<a href="/admin/logout"><button>Logout</button></a>
+			</center>
+			</div>
+		</div>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			var socket = io();
+			socket.on('connect',function(){
+				socket.emit('adminjoin',"<%=token%>",function(res){
+					console.log(res);
+				});
+			});
+
+			function givequestion(){
+				var username = document.getElementById('username').value;
+				var diff = document.getElementById('diff').value;
+				console.log(username);
+				socket.emit('giveQuestion',username,diff,function(res){
+					document.getElementById('msg').innerHTML = res.err;
+				});	
+			}
+
+		</script>
+	</body>
+</html>

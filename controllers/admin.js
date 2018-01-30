@@ -5,7 +5,6 @@ const bcrypt = require('bcrypt-nodejs');
 const jwt = require('./../jwt.js');
 const {secret} = require('./../config.js');
 
-
 router.post('/create',(req,res)=>{
 
 	Admin.create({username:req.body.username,password:bcrypt.hashSync(req.body.password)},(err,data)=>{
@@ -17,6 +16,12 @@ router.post('/create',(req,res)=>{
 		}
 		return res.status(200).json({msg:"Success"});
 	});
+
+});
+
+router.get('/login',(req,res)=>{
+
+	res.render('admin/login');
 
 });
 
@@ -34,9 +39,15 @@ router.post('/login',(req,res)=>{
 			return res.status(401).json({err:"Invalid Username/Password"});
 		
 		};	
-		return res.status(200).json({msg:"Logged In",token:jwt.issueToken({id:"admin"},secret,"1d")});
+		return res.render('admin/panel',{msg:"Logged In",token:jwt.issueToken({id:"admin"},secret,"1d")});
 
 	});
+
+});
+
+router.get('/logout',(req,res)=>{
+
+	res.redirect('/admin/login');
 
 });
 

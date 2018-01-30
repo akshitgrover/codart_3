@@ -20,6 +20,7 @@ router.post('/create',adminPolicy,(req,res)=>{
 	const expln = req.body.expln;
 	const diff = req.body.diff;
 	const testoutput = req.body.testoutput;
+	const cnstr = req.body.cnstr;
 	var diffStr;
 	
 	if(path.extname(req.files.testcase.name) != '.txt'){
@@ -55,7 +56,7 @@ router.post('/create',adminPolicy,(req,res)=>{
 		}
 
 		const testcase = require('path').join(__dirname + "./../testcases/" + qnum.toString() + diffStr + '.txt');
-		const que = {qnum,stmt,inputf,outputf,sinput,soutput,expln,diff,testcase,testoutput};
+		const que = {qnum,stmt,inputf,outputf,sinput,soutput,expln,diff,testcase,testoutput,cnstr};
 		Question.create(que,(err,data)=>{
 		
 			if(err){
@@ -102,7 +103,7 @@ router.get('/question',verifyToken,(req,res)=>{
 				return res.status(400).json({err:"Bad Request, Error Occured."});
 	
 			}
-			return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:que.qnum,diff:que.diff});
+			return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:que.qnum,diff:que.diff});
 	
 		});
 	
@@ -135,7 +136,7 @@ router.post('/skip',verifyToken,(req,res)=>{
 					}
 					data.start = new Date();
 					data.save();
-					return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:que.qnum,diff:que.diff});
+					return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:que.qnum,diff:que.diff});
 
 				});
 

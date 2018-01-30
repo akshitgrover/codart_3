@@ -31,6 +31,9 @@ const model = new schema({
 	},
 	testcase:{
 		type:'string'
+	},
+	cnstr:{
+		type:'string'
 	}
 });
 
