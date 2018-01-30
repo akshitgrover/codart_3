@@ -44,6 +44,10 @@ const model = new schema({
 	cqnum:{
 		type:'number',
 		default:0
+	},
+	start:{
+		type:'Date',
+		default:0
 	}
 },{minimize:false}
 );

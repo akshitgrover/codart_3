@@ -5,7 +5,7 @@ const {secret} = require('./../config.js');
 const {api_key} = require('./../config.js');
 const {uploadPath} = require('./../config.js');
 const {hackerrankUrl} = require('./../config.js');
-const verfiyToken = require('./../policies/jwtVerify.js');
+const verifyToken = require('./../policies/jwtVerify.js');
 const Request = require('request');
 const path = require('path');
 const fs = require('fs');
@@ -16,7 +16,7 @@ const Question = require('./../models/question.js');
 router.post('/login',(req,res)=>{
 	User.findOne({username:req.body.username},{username:1,password:1,_id:0},(err,data)=>{
 
-		// Erro Handler: 
+		// Error Handler: 
 
 		if(err){
 			return res.status(400).json({err:"Bad Request, Error Occured."});
@@ -34,7 +34,7 @@ router.post('/login',(req,res)=>{
 	});
 });
 
-router.post('/post',verfiyToken,(req,res)=>{
+router.post('/post',verifyToken,(req,res)=>{
 	var ddata = jwt.decodeToken(req.headers.authorization.split(' ')[1]);
 	User.findOne({username:ddata.payload.id},(err,data)=>{
 
@@ -161,6 +161,7 @@ router.post('/post',verfiyToken,(req,res)=>{
 						else{
 							data.cqnum = -1;
 							data.cdiff = -1;
+							data.start = -1;
 							data.save();
 						} 
 						return res.status(200).json({msg:"Success"});
@@ -168,6 +169,44 @@ router.post('/post',verfiyToken,(req,res)=>{
 				});
 			});
 		});                                                                                                                                                      
+	});
+});
+
+router.get('/leaderboard',(req,res)=>{
+	
+	// Get Sorted List Of TeamNames Based on scores:
+
+	User.find({},{username:1,score:1,_id:0},{sort:{score:-1}},(err,data)=>{
+		
+		// Error Handling:
+
+		if(err){
+			return res.status(400).json({err:"Bad Request, Error Occured."});
+		}
+		console.log(data);
+
+		// Return Data:
+
+		return res.status(200).json({msg:"Success",data:data});
+	});
+});
+
+router.get('/score',verifyToken,(req,res)=>{
+
+	// Decode Token:
+
+	var ddata = jwt.decodeToken(req.headers.authorization.split(' ')[1]);
+	User.findOne({username:ddata.payload.id},{username:1,score:1,_id:0},(err,data)=>{
+		
+		// Error Handler:
+
+		if(err){
+			return res.status(400).json({err:"Bad Request, Error Occured."});
+		}
+
+		// Return Score:
+
+		return res.status(200).json({msg:"Success",score:data.score,username:data.username});
 	});
 });
 
