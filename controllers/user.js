@@ -9,6 +9,7 @@ const verifyToken = require('./../policies/jwtVerify.js');
 const Request = require('request');
 const path = require('path');
 const fs = require('fs');
+const bcrypt = require('bcrypt-nodejs');
 
 const User = require('./../models/user.js');
 const Question = require('./../models/question.js');
@@ -21,11 +22,11 @@ router.post('/login',(req,res)=>{
 		if(err){
 			return res.status(400).json({err:"Bad Request, Error Occured."});
 		}
-		if(!data){
+
+		// Authorization Checker:
+
+		if(!data || !bcrypt.compareSync(req.body.password,data.password)){
 			return res.status(404).json({err:"Invalid Username/Password"});
-		}
-		if(data.password != req.body.password){
-			return res.status(401).json({err:"Invalid Username/Password"});
 		}
 
 		// Return Token: 
@@ -38,7 +39,7 @@ router.post('/post',verifyToken,(req,res)=>{
 	var ddata = jwt.decodeToken(req.headers.authorization.split(' ')[1]);
 	User.findOne({username:ddata.payload.id},(err,data)=>{
 
-		// Erro Handler: 
+		// Error Handler: 
 
 		if(err){
 			return res.status(400).json({err:"Bad Request, Error Occured"});
@@ -211,7 +212,7 @@ router.get('/score',verifyToken,(req,res)=>{
 });
 
 router.post('/create',(req,res)=>{
-	User.create({username:req.body.username,password:req.body.password},(err,data)=>{
+	User.create({username:req.body.username,password:bcrypt.hashSync(req.body.password)},(err,data)=>{
 		console.log(err);
 		console.log(data);
 	});

@@ -20,10 +20,10 @@ router.post('/create',(req,res)=>{
 	if(diff == 0){
 		diffStr = 'B';
 	}
-	else if(cdiff == 1){
+	else if(diff == 1){
 		diffStr = 'E';
 	}
-	else if(cdiff == 2){
+	else if(diff == 2){
 		diffStr = 'M';
 	}
 	else{
