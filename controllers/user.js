@@ -143,12 +143,11 @@ router.post('/post',verifyToken,(req,res)=>{
 						return res.status(500).json({err:"Something Went Wrong."});
 					}
 					body = JSON.parse(body);
-					console.log(body.result.stdout);
 					if(body.result.stdout == null){
 						data.save();
 						return res.status(200).json({msg:"Compilation Error"});
 					}
-					else if(body.result.stdout != que.testoutput){
+					else if(body.result.stdout[0] != que.testoutput){
 						data.save();
 						return res.status(200).json({msg:"Wrong Answer"});
 					}

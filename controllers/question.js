@@ -19,7 +19,8 @@ router.post('/create',adminPolicy,(req,res)=>{
 	const soutput = req.body.soutput;
 	const expln = req.body.expln;
 	const diff = req.body.diff;
-	const testoutput = req.body.testoutput;
+	var testoutput = req.body.testoutput;
+	testoutput = testoutput.replace(/\r\n/g,'\n');
 	const cnstr = req.body.cnstr;
 	var diffStr;
 	
