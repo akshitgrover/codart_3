@@ -1,7 +1,11 @@
 var jwt = require('./../jwt.js');
 var {secret} = require('./../config.js');
 
+// Export Middleware
+
 module.exports = (req,res,next)=>{
+
+	// Error Handling
 
 	if(!req.headers.authorization){
 
@@ -19,6 +23,9 @@ module.exports = (req,res,next)=>{
 		return res.status(401).json({err:"Invalid Token"});
 	
 	}
+
+	// Callback To Next Middleware
+
 	next();
 	
 }

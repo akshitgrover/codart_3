@@ -3,18 +3,17 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyParser = require('body-parser');
-const socketIO = require('socket.io');
 const http = require('http');
 const path = require('path');
 const multipart = require('connect-multiparty');
+const cors = require('cors');
 
 
 // Functional Usage Of Packages
 
 const app = express();
 const server = http.createServer(app);
-const io = socketIO(server);
-
+app.use(cors());
 
 // Parser Options
 
@@ -23,10 +22,8 @@ app.use(multipart({uploadDir:path.join(__dirname + '/.tmp')}));
 
 // Socket Definition
 
-io.on("connection",(socket)=>{
-	console.log("Connected");
-	
-});
+const socketFunc = require('./socket.js');
+socketFunc(server);
 
 
 // Set Views
@@ -35,7 +32,18 @@ app.set("views",path.join(__dirname + "/views"));
 app.set("view engine","ejs");
 
 
+// Static Directory
+
+app.use(express.static(path.join(__dirname + '/assets')));
+
 // Routes
+
+/* Backend Testing Routes */
+
+app.use('/ur',(req,res,next)=>{res.render('uindex')});
+app.use('/ar',(req,res,next)=>{res.render('aindex')});
+
+/* API Routes */
 
 const user = require('./controllers/user.js');
 app.use('/user',user);
@@ -43,17 +51,24 @@ app.use('/user',user);
 const question = require('./controllers/question.js');
 app.use('/question',question);
 
+const admin = require('./controllers/admin.js');
+app.use('/admin',admin);
+
 
 // MongoDb Connection
 
 const {mongoUrl} = require('./config.js');
 
 mongoose.connect(mongoUrl,(err,db)=>{
+
 	if(err){
+	
 		console.log("Error Connecting To MongoDb");
 		process.exit(1);
+	
 	}
 	console.log("Connected To MongoDb.");
+
 });
 
 

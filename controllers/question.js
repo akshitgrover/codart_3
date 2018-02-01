@@ -9,7 +9,11 @@ const adminPolicy = require('./../policies/adminPolicy.js');
 const Question = require('./../models/question.js');
 const User = require('./../models/user.js');
 
+// Create Question
+
 router.post('/create',adminPolicy,(req,res)=>{
+
+	// Object Marshalling
 
 	const qnum = req.body.qnum;
 	const stmt = req.body.stmt;
@@ -24,11 +28,15 @@ router.post('/create',adminPolicy,(req,res)=>{
 	const cnstr = req.body.cnstr;
 	var diffStr;
 	
+	// Error Handling:
+
 	if(path.extname(req.files.testcase.name) != '.txt'){
 
 		return res.status(400).json({err:"Invalid File Format."});
 		
 	}
+
+	// Difficulty Checking
 
 	if(diff == 0){
 
@@ -50,14 +58,22 @@ router.post('/create',adminPolicy,(req,res)=>{
 		diffStr = 'H';
 	
 	}
+
+	// Finding Question
+
 	Question.findOne({qnum:qnum,diff:diff},(err,qf)=>{
 
 		if(qf){
 			return res.status(409).json({err:"Question Already Exists"});
 		}
 
+		// Upload TestCase File
+
 		const testcase = require('path').join(__dirname + "./../testcases/" + qnum.toString() + diffStr + '.txt');
 		const que = {qnum,stmt,inputf,outputf,sinput,soutput,expln,diff,testcase,testoutput,cnstr};
+		
+		// Create Question
+
 		Question.create(que,(err,data)=>{
 		
 			if(err){
@@ -65,8 +81,14 @@ router.post('/create',adminPolicy,(req,res)=>{
 				return res.status(400).json({err:"Bad Request, Error Occured."});
 		
 			}
+
+			// Path For Uploaded File
+
 			const tupath = path.join(__dirname + '/../testcases/' + qnum + diffStr + '.txt');
 			fs.renameSync(req.files.testcase.path,tupath);
+
+			// Give Response
+
 			return res.status(200).json({msg:"Create",que:data});
 		
 		});
@@ -77,9 +99,13 @@ router.post('/create',adminPolicy,(req,res)=>{
 
 router.get('/question',verifyToken,(req,res)=>{
 	
+	// Decode Token
+
 	var ddata = jwt.decodeToken(req.headers.authorization.split(' ')[1]);
 	User.findOne({username:ddata.payload.id},(err,data)=>{
 	
+		// Error Handling
+
 		if(err){
 	
 			return res.status(400).json({err:"Bad Request, Error Occured."});
@@ -90,6 +116,9 @@ router.get('/question',verifyToken,(req,res)=>{
 			return res.status(400).json({err:"No Active Question Yet."});
 	
 		}
+
+		// Setting Start Timer Of Question
+
 		if(data.start - new Date(0) == 0){
 	
 			var d = new Date();
@@ -97,13 +126,21 @@ router.get('/question',verifyToken,(req,res)=>{
 			data.save();
 	
 		}
+
+		// Find Question
+
 		Question.findOne({qnum:data.cqnum,diff:data.cdiff},(err,que)=>{
 	
+			// Error Handling
+
 			if(err){
 	
 				return res.status(400).json({err:"Bad Request, Error Occured."});
 	
 			}
+
+			// Send Question Response
+
 			return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:que.qnum,diff:que.diff});
 	
 		});
@@ -114,15 +151,24 @@ router.get('/question',verifyToken,(req,res)=>{
 
 router.post('/skip',verifyToken,(req,res)=>{
 
+	// Decode Token
+
 	var ddata = jwt.decodeToken(req.headers.authorization.split(' ')[1]);
 
+	// Find User
+
 	User.findOne({username:ddata.payload.id},(err,data)=>{
+
+		// Error Handling
 
 		if(err){
 
 			return res.status(400).json({err:"Bad Request, Error Occured."});
 
 		}
+
+		// Checking Eligibility To Skip
+
 		if(new Date() - data.start >= 1200000 && data.start - new Date(0) != 0){
 
 			if(data.cdiff == 0){

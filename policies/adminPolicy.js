@@ -1,7 +1,11 @@
 const jwt = require('./../jwt.js');
 const {secret} = require('./../config.js');
 
+// Define Middleware
+
 var func = (req,res,next)=>{
+
+	// Error Handling
 
 	if(!req.body.token){
 
@@ -19,8 +23,13 @@ var func = (req,res,next)=>{
 		return res.status(401).json({err:"Unauthorized"});
 
 	}
+
+	// If Passed Callback To Next Middleware
+
 	next();
 
 }
+
+// Export Defined Middleware
 
 module.exports = func;
