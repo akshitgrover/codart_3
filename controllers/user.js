@@ -18,7 +18,7 @@ router.post('/login',(req,res)=>{
 	User.findOne({username:req.body.username},{username:1,password:1,_id:0},(err,data)=>{
 
 		// Error Handler: 
-
+		console.log("Login Request");
 		if(err){
 			return res.status(400).json({err:"Bad Request, Error Occured."});
 		}
@@ -157,14 +157,25 @@ router.post('/post',verifyToken,(req,res)=>{
 						if(data.cdiff == 0 && data.cqnum == 0){
 							data.cqnum = 1;
 							data.save();
+							Question.findOne({diff:0,qnum:1},(err,que)=>{
+								if(err){
+									data.cqnum = 0;
+									data.score -= 1;
+									data.save();
+									return res.status(400).json({err:"Bad Request, Error Occured."});
+								}
+								data.start = new Date();
+								data.save();
+								return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:que.qnum,diff:que.diff});
+							});
 						}
 						else{
 							data.cqnum = -1;
 							data.cdiff = -1;
-							data.start = -1;
+							data.start = new Date(0);
 							data.save();
+							return res.status(200).json({msg:"Success"});
 						} 
-						return res.status(200).json({msg:"Success"});
 					}
 				});
 			});

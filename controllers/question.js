@@ -123,36 +123,25 @@ router.post('/skip',verifyToken,(req,res)=>{
 			return res.status(400).json({err:"Bad Request, Error Occured."});
 
 		}
-		if(new Date() - data.start >= 5000 && data.start - new Date(0) != 0){
+		if(new Date() - data.start >= 1200000 && data.start - new Date(0) != 0){
 
-			if(data.cdiff == 0 && data.cqnum == 0){
+			if(data.cdiff == 0){
 
-				data.cqnum = 1;
-				Question.findOne({qnum:data.cqnum,diff:data.cdiff},(err,que)=>{
-
-					if(err){
-
-						return res.status(400).json({err:"Bad Request, Error Occured."});
-
-					}
-					data.start = new Date();
-					data.save();
-					return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:que.qnum,diff:que.diff});
-
-				});
+				return res.status(400).json({err:"Cannot Skip Buffer Question."});
 
 			}
 			else{
 
 				data.cqnum = -1;
 				data.cdiff = -1;
+				data.score -= 0.5;
 				data.start = new Date(0);
 				data.save(0);
 				return res.status(200).json({msg:"Contact Administrator For New Question."});
 
 			}
 		}
-		else if(new Date() - data.start < 5000){
+		else if(new Date() - data.start < 1200000){
 
 			return res.status(200).json({msg:"Cannot Skip Right Now."});
 
