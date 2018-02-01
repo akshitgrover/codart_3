@@ -41,6 +41,9 @@ router.post('/post',verifyToken,(req,res)=>{
 
 		// Error Handler: 
 
+		if(!req.files.code){
+			return res.status(400).json({err:"No File Uploaded"});
+		}
 		if(err){
 			return res.status(400).json({err:"Bad Request, Error Occured"});
 		}

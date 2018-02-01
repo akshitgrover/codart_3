@@ -30,6 +30,9 @@ router.post('/create',adminPolicy,(req,res)=>{
 	
 	// Error Handling:
 
+	if(!req.files.testcase){
+		return res.status(400).json({err:"No File Selected."});
+	}
 	if(path.extname(req.files.testcase.name) != '.txt'){
 
 		return res.status(400).json({err:"Invalid File Format."});
