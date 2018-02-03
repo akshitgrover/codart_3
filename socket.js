@@ -25,13 +25,7 @@ var obju = {};
 
 // Create Socket Driver Function
 
-const socketFunc = (server)=>{
-
-	// Define Socket Driver Object
-
-	io = socketIO(server);
-	
-	// Define Socket Connection
+const socketFunc = (io)=>{
 
 	io.on('connection',(socket)=>{
 		
@@ -61,6 +55,13 @@ const socketFunc = (server)=>{
 				
 					return cb({err:"Error Occured."});
 
+				}
+
+				if(obju[data.username]){
+
+					console.log(data.username + "Already Connected.");
+					return cb({err:"Already Joined."});
+					
 				}
 
 				// Store Token

@@ -9,6 +9,14 @@ const adminPolicy = require('./../policies/adminPolicy.js');
 const Question = require('./../models/question.js');
 const User = require('./../models/user.js');
 
+var io;
+
+var func = (res)=>{
+
+	io = res;
+
+}
+
 // Create Question
 
 router.post('/create',adminPolicy,(req,res)=>{
@@ -170,34 +178,44 @@ router.post('/skip',verifyToken,(req,res)=>{
 
 		}
 
+		if(data.cdiff == 0){
+			return res.status(200).json({msg:"Cannot Skip Buffer Question."});
+		}
+
 		// Checking Eligibility To Skip
 
-		if(new Date() - data.start >= 1200000 && data.start - new Date(0) != 0){
+		if(new Date() - data.start >= 60000 && data.start - new Date(0) != 0){
 
-			if(data.cdiff == 0){
+			data.cqnum = -1;
+			data.cdiff = -1;
+			data.score -= 0.5;
+			data.start = new Date(0);
+			data.save().then(()=>{
 
-				return res.status(400).json({err:"Cannot Skip Buffer Question."});
+				User.find({},{username:1,score:1,_id:0},{sort:{score:-1}},(err,uscore)=>{
 
-			}
-			else{
+					if(err){
+					
+						console.log("Error Occured, While Fetching To Emit Score.");
+						return;
+					
+					}
+					io.emit('score',uscore);
+				
+				});
+			
+			});
+			return res.status(200).json({msg:"Contact Administrator For New Question.",flag:-1});
 
-				data.cqnum = -1;
-				data.cdiff = -1;
-				data.score -= 0.5;
-				data.start = new Date(0);
-				data.save(0);
-				return res.status(200).json({msg:"Contact Administrator For New Question."});
-
-			}
 		}
-		else if(new Date() - data.start < 1200000){
+		else if(new Date() - data.start < 60000){
 
 			return res.status(200).json({msg:"Cannot Skip Right Now."});
 
 		}
 		else if(new Date(0) - data.start == 0){
 
-			return res.status(200).json({msg:"Contact Administrator For New Question."});
+			return res.status(200).json({msg:"Contact Administrator For New Question.",flag:-1});
 
 		}
 
@@ -206,4 +224,9 @@ router.post('/skip',verifyToken,(req,res)=>{
 });
 
 
-module.exports = router;
+module.exports = {
+
+	router,
+	func
+
+}
