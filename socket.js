@@ -60,6 +60,7 @@ const socketFunc = (io)=>{
 				if(obju[data.username]){
 
 					console.log(data.username + "Already Connected.");
+					io.sockets.sockets[socket.id].disconnect();
 					return cb({err:"Already Joined."});
 					
 				}
@@ -195,7 +196,7 @@ const socketFunc = (io)=>{
 					io.to(obju[username].socketid).emit('question',obj);
 
 					// Acknowledge Question Emit In Console
-
+					
 					console.log("Emitted Question: " + que.qnum + " Diff: " + que.diff + " For: " + username);
 					
 					// Update Question In Local Variables
