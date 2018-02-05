@@ -158,7 +158,7 @@ router.post('/post',verifyToken,(req,res)=>{
 				
 				if(extname == '.py'){
 	
-					lang = 5;
+					lang = 30;
 	
 				}
 				else if(extname == '.cpp'){
