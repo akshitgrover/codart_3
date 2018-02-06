@@ -31,17 +31,15 @@ router.post('/create',adminPolicy,(req,res)=>{
 	const soutput = req.body.soutput;
 	const expln = req.body.expln;
 	const diff = req.body.diff;
-	var testoutput = req.body.testoutput;
-	testoutput = testoutput.replace(/\r\n/g,'\n');
 	const cnstr = req.body.cnstr;
 	var diffStr;
 	
 	// Error Handling:
 
-	if(!req.files.testcase){
+	if(!req.files.testcase || !req.files.testoutput){
 		return res.status(400).json({err:"No File Selected."});
 	}
-	if(path.extname(req.files.testcase.name) != '.txt'){
+	if(path.extname(req.files.testcase.name) != '.txt' || path.extname(req.files.testoutput.name) != '.txt'){
 
 		return res.status(400).json({err:"Invalid File Format."});
 		
@@ -80,7 +78,8 @@ router.post('/create',adminPolicy,(req,res)=>{
 
 		// Upload TestCase File
 
-		const testcase = require('path').join(__dirname + "./../testcases/" + qnum.toString() + diffStr + '.txt');
+		const testcase = require('path').join(__dirname + "/../testcases/" + qnum.toString() + diffStr + '.txt');
+		const testoutput = require('path').join(__dirname + "/../testoutputs/" + qnum.toString() + diffStr + '.txt');
 		const que = {qnum,stmt,inputf,outputf,sinput,soutput,expln,diff,testcase,testoutput,cnstr};
 		
 		// Create Question
@@ -96,7 +95,9 @@ router.post('/create',adminPolicy,(req,res)=>{
 			// Path For Uploaded File
 
 			const tupath = path.join(__dirname + '/../testcases/' + qnum + diffStr + '.txt');
+			const toupath = path.join(__dirname + '/../testoutputs/' + qnum + diffStr + '.txt');
 			fs.renameSync(req.files.testcase.path,tupath);
+			fs.renameSync(req.files.testoutput.path,toupath);
 
 			// Give Response
 

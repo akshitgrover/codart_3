@@ -155,15 +155,20 @@ router.post('/post',verifyToken,(req,res)=>{
 				// Check For Extensions: 
 
 				var lang = -1;
-				
-				if(extname == '.py'){
-	
+				console.log(req.body.py);
+				if(extname == '.py' && req.body.py == 3){
+
 					lang = 30;
+
+				}
+				else if(extname == '.py' && req.body.py == 2){
+	
+					lang = 5;
 	
 				}
 				else if(extname == '.cpp'){
 	
-					lang = 2;
+					lang = 58;
 	
 				}
 				else if(extname == '.c'){
@@ -188,7 +193,7 @@ router.post('/post',verifyToken,(req,res)=>{
 				}
 
 				// Invalid File Format Checker:
-
+				console.log(lang);
 				if(lang == -1){
 			
 					return res.status(400).json({err:"Invalid File Format"});
@@ -205,22 +210,31 @@ router.post('/post',verifyToken,(req,res)=>{
 			
 					}
 					body = JSON.parse(body);
+					if(!body || !body.result){
+
+						return res.json({err:"Something Went Wrong."});
+					
+					}
+
+					var output = fs.readFileSync(que.testoutput,{encoding:'utf-8',flag:'r'});
+					output = output.replace("\r\n","\n");
+					
 					console.log(body.result.stdout);
-					console.log(que.testoutput);
+					console.log(JSON.stringify(output));
+					
 					if(body.result.stdout == null){
 			
 						data.save();
 						return res.status(200).json({msg:"Compilation Error"});
 			
 					}
-					else if(body.result.stdout[0] != que.testoutput){
+					else if(body.result.stdout[0] != output){
 			
 						data.save();
 						return res.status(200).json({msg:"Wrong Answer"});
 			
 					}
-					else if(body.result.stdout[0] == que.testoutput){
-						
+					else if(body.result.stdout[0] == output){
 						data.score += 1;
 						data.csubmissions.push(pathFile);
 						if(data.cdiff == 0 && data.cqnum == 0){
