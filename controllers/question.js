@@ -153,7 +153,7 @@ router.get('/question',verifyToken,(req,res)=>{
 
 			// Send Question Response
 
-			return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:que.qnum,diff:que.diff});
+			return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:data.dqnum,diff:que.diff});
 	
 		});
 	

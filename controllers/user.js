@@ -252,6 +252,7 @@ router.post('/post',verifyToken,(req,res)=>{
 						
 								}
 								data.start = new Date();
+								data.dqnum += 1;
 								data.save().then(()=>{
 
 									User.find({},{username:1,score:1,_id:0},{sort:{score:-1}},(err,uscore)=>{
@@ -267,7 +268,7 @@ router.post('/post',verifyToken,(req,res)=>{
 									});
 								
 								});
-								return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:que.qnum,diff:que.diff});
+								return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:data.dqnum,diff:que.diff});
 						
 							});
 						
@@ -276,6 +277,7 @@ router.post('/post',verifyToken,(req,res)=>{
 
 							data.cqnum = -1;
 							data.cdiff = -1;
+							data.dqnum += 1;
 							data.start = new Date(0);
 							data.save().then(()=>{
 

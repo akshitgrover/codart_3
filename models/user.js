@@ -48,6 +48,10 @@ const model = new schema({
 	start:{
 		type:'Date',
 		default:0
+	},
+	dqnum:{
+		type:'number',
+		default:1
 	}
 },{minimize:false}
 );
