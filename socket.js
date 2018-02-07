@@ -194,7 +194,7 @@ const socketFunc = (io)=>{
 
 					// Emit Question To Specific User
 
-					obj["qnum"] = uf.dqnum;
+					obj["qnum"] = uf.dqnum + 1;
 					io.to(obju[username].socketid).emit('question',obj);
 
 					// Acknowledge Question Emit In Console
@@ -222,9 +222,8 @@ const socketFunc = (io)=>{
 					}
 
 					// Update User In Database
-
+					
 					uf.cqnum = qnum;
-					uf.dqnum += 1;
 					uf.cdiff = diff;
 					uf.start = new Date();
 					uf.save();
@@ -269,4 +268,9 @@ const socketFunc = (io)=>{
 	});
 }
 
-module.exports = socketFunc;
+module.exports = {
+	socketFunc,
+	funcObj : (username)=>{
+		obju[username] += 1;
+	}
+}

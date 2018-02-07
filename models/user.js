@@ -51,7 +51,7 @@ const model = new schema({
 	},
 	dqnum:{
 		type:'number',
-		default:1
+		default:0
 	}
 },{minimize:false}
 );

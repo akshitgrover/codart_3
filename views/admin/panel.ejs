@@ -49,7 +49,7 @@
 
 				</div>
 			<h1 style="margin-top:25px">Give Question</h1><br>
-				<form>
+				<form id="emitQue">
 					<input type="text" id="username" placeholder="Username">
 					<input type="text" id="diff" placeholder="Diffculty"><br><br>
 				</form>
@@ -69,8 +69,10 @@
 			});
 
 			function givequestion(){
+				setTimeout(function(){document.getElementById('msg').innerHTML = ""},3000);
 				var username = document.getElementById('username').value;
 				var diff = document.getElementById('diff').value;
+				document.getElementById('emitQue').reset();
 				console.log(username);
 				socket.emit('giveQuestion',username,diff,function(res){
 					document.getElementById('msg').innerHTML = res.err;

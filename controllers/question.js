@@ -153,7 +153,7 @@ router.get('/question',verifyToken,(req,res)=>{
 
 			// Send Question Response
 
-			return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:data.dqnum,diff:que.diff});
+			return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:data.dqnum + 1,diff:que.diff});
 	
 		});
 	
@@ -190,6 +190,8 @@ router.post('/skip',verifyToken,(req,res)=>{
 			data.cqnum = -1;
 			data.cdiff = -1;
 			data.score -= 0.5;
+			data.dqnum += 1;
+			require('./../socket.js').funcObj(data.username);
 			data.start = new Date(0);
 			data.save().then(()=>{
 

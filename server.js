@@ -25,7 +25,7 @@ app.use(multipart({uploadDir:path.join(__dirname + '/.tmp')}));
 
 const io = socketIO(server);
 
-const socketFunc = require('./socket.js');
+const {socketFunc} = require('./socket.js');
 socketFunc(io);
 
 const userFunc = require('./controllers/user.js').func;

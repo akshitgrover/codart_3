@@ -268,7 +268,7 @@ router.post('/post',verifyToken,(req,res)=>{
 									});
 								
 								});
-								return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:data.dqnum,diff:que.diff});
+								return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:data.dqnum + 1,diff:que.diff});
 						
 							});
 						
@@ -317,7 +317,6 @@ router.get('/leaderboard',(req,res)=>{
 			return res.status(400).json({err:"Bad Request, Error Occured."});
 	
 		}
-		console.log(data);
 
 		// Return Data:
 
