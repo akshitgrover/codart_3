@@ -8,13 +8,12 @@ const Question = require('./models/question.js');
 // Define Class For User
 
 class user{
-	constructor(username,socketid,easyi,medi,hardi,dqnum){
+	constructor(username,socketid,easyi,medi,hardi){
 		this.username = username,
 		this.socketid = socketid,
 		this.easyi = easyi;
 		this.medi = medi;
 		this.hardi = hardi;
-		this.dqnum = dqnum;
 	}
 }
 
@@ -72,7 +71,7 @@ const socketFunc = (io)=>{
 
 				// Define User Object
 
-				obju[ddata.payload.id] = new user(ddata.payload.id,socket.id,data.easyi,data.medi,data.hardi,data.dqnum);
+				obju[ddata.payload.id] = new user(ddata.payload.id,socket.id,data.easyi,data.medi,data.hardi);
 				
 				// Fire Console Log Statement
 
@@ -198,6 +197,7 @@ const socketFunc = (io)=>{
 					io.to(obju[username].socketid).emit('question',obj);
 
 					// Acknowledge Question Emit In Console
+
 					console.log("Emitted Question: " + que.qnum + " Diff: " + que.diff + " For: " + username);
 					
 					// Update Question In Local Variables
@@ -272,5 +272,13 @@ module.exports = {
 	socketFunc,
 	funcObj : (username)=>{
 		obju[username] += 1;
+	},
+	funcObjs : (username)=>{
+		if(!obju[username]){
+			return false;
+		}
+		else{
+			return true;
+		}
 	}
 }

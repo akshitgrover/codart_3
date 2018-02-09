@@ -52,7 +52,16 @@ router.post('/login',(req,res)=>{
 
 router.post('/post',verifyToken,(req,res)=>{
 	
+	// Decode Token
+
 	var ddata = jwt.decodeToken(req.headers.authorization.split(' ')[1]);
+
+	// Check If Socket Is Connected
+
+	if(!require('./../socket.js').funcObjs(ddata.payload.id)){
+		return res.status(400).json({err:"Not Connected To The Server."});
+	}
+	
 	User.findOne({username:ddata.payload.id},(err,data)=>{
 
 		// Error Handler: 
@@ -120,7 +129,7 @@ router.post('/post',verifyToken,(req,res)=>{
 			data.submissions.push(pathFile);
 			if(!data.submissionc[que.qnum.toString() + diffStr.toString()]){
 	
-				data.submissionc[que.qnum.toString() + diffStr.toString()] = 1;
+				data.submissionc[data.dqnum] = 1;
 				console.log(data.submissionc);
 				data.markModified('submissionc');
 	

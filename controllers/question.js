@@ -114,6 +114,13 @@ router.get('/question',verifyToken,(req,res)=>{
 	// Decode Token
 
 	var ddata = jwt.decodeToken(req.headers.authorization.split(' ')[1]);
+
+	// Check If Socket Is Connected
+
+	if(!require('./../socket.js').funcObjs(ddata.payload.id)){
+		return res.status(400).json({err:"Not Connected To The Server."});
+	}
+
 	User.findOne({username:ddata.payload.id},(err,data)=>{
 	
 		// Error Handling
@@ -167,6 +174,12 @@ router.post('/skip',verifyToken,(req,res)=>{
 
 	var ddata = jwt.decodeToken(req.headers.authorization.split(' ')[1]);
 
+	// Check If Socket Is Connected
+
+	if(!require('./../socket.js').funcObjs(ddata.payload.id)){
+		return res.status(400).json({err:"Not Connected To The Server."});
+	}
+
 	// Find User
 
 	User.findOne({username:ddata.payload.id},(err,data)=>{
@@ -191,7 +204,6 @@ router.post('/skip',verifyToken,(req,res)=>{
 			data.cdiff = -1;
 			data.score -= 0.5;
 			data.dqnum += 1;
-			require('./../socket.js').funcObj(data.username);
 			data.start = new Date(0);
 			data.save().then(()=>{
 
