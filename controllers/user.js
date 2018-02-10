@@ -58,9 +58,9 @@ router.post('/post',verifyToken,(req,res)=>{
 
 	// Check If Socket Is Connected
 
-	if(!require('./../socket.js').funcObjs(ddata.payload.id)){
-		return res.status(400).json({err:"Not Connected To The Server."});
-	}
+	// if(!require('./../socket.js').funcObjs(ddata.payload.id)){
+	// 	return res.status(400).json({err:"Not Connected To The Server."});
+	// }
 	
 	User.findOne({username:ddata.payload.id},(err,data)=>{
 
@@ -127,16 +127,16 @@ router.post('/post',verifyToken,(req,res)=>{
 			const extname = path.extname(req.files.code.path);
 			const pathFile = uploadPath + '/' + data.username + '_' + que.qnum.toString() + diffStr + '_' + (new Date()).getTime() + extname;
 			data.submissions.push(pathFile);
-			if(!data.submissionc[que.qnum.toString() + diffStr.toString()]){
+			if(!data.submissionc[data.qnum]){
 	
-				data.submissionc[data.dqnum] = 1;
+				data.submissionc[data.dqnum + 1] = 1;
 				console.log(data.submissionc);
 				data.markModified('submissionc');
 	
 			}
 			else{
 	
-				data.submissionc[que.qnum.toString() + diffStr.toString()] += 1;
+				data.submissionc[data.dqnum + 1] += 1;
 				data.markModified('submissionc');
 	
 			}
@@ -212,7 +212,7 @@ router.post('/post',verifyToken,(req,res)=>{
 				// Make A Request To HackerRank API:
 
 				Request.post({url:hackerrankUrl,form:{source:code,lang:lang,testcases:testcases,api_key:api_key,wait:true,format:"json"}},(err,response,body)=>{
-			
+
 					if(err){
 			
 						return res.status(500).json({err:"Something Went Wrong."});
@@ -230,8 +230,11 @@ router.post('/post',verifyToken,(req,res)=>{
 					
 					console.log(body.result.stdout);
 					console.log(JSON.stringify(output));
-					
-					if(body.result.stdout == null){
+					if(body.result.message == "Terminated due to timeout"){
+						data.save();
+						return res.status(200).json({msg:"Terminated due to timeout"});
+					}
+					else if(body.result.stdout == null){
 			
 						data.save();
 						return res.status(200).json({msg:"Compilation Error"});
@@ -244,40 +247,38 @@ router.post('/post',verifyToken,(req,res)=>{
 			
 					}
 					else if(body.result.stdout[0] == output){
-						data.score += 1;
+						data.score += 50;
 						data.csubmissions.push(pathFile);
 						if(data.cdiff == 0 && data.cqnum == 0){
 						
 							data.cqnum = 1;
-							data.save();
-							Question.findOne({diff:0,qnum:1},(err,que)=>{
+							Question.findOne({diff:0,qnum:1},(err,quef)=>{
 						
 								if(err){
 						
 									data.cqnum = 0;
-									data.score -= 1;
+									data.score -= 50;
 									data.save();
 									return res.status(400).json({err:"Bad Request, Error Occured."});
 						
 								}
 								data.start = new Date();
 								data.dqnum += 1;
-								data.save().then(()=>{
-
-									User.find({},{username:1,score:1,_id:0},{sort:{score:-1}},(err,uscore)=>{
+								console.log("INC");
+								data.save();
+								User.find({},{username:1,score:1,_id:0},{sort:{score:-1}},(err,uscore)=>{
+					
+									if(err){
 						
-										if(err){
-							
-											console.log("Error Occured, While Fethcing To Emit Score")
-											return;
-							
-										}
-										io.emit('score',uscore);
-							
-									});
-								
+										console.log("Error Occured, While Fethcing To Emit Score")
+										return;
+						
+									}
+									io.emit('score',uscore);
+						
 								});
-								return res.status(200).json({stmt:que.stmt,inputf:que.inputf,outputf:que.outputf,cnstr:que.cnstr,sinput:que.sinput,soutput:que.soutput,expln:que.expln,qnum:data.dqnum + 1,diff:que.diff});
+								console.log(data);
+								return res.status(200).json({stmt:quef.stmt,inputf:quef.inputf,outputf:quef.outputf,cnstr:quef.cnstr,sinput:quef.sinput,soutput:quef.soutput,expln:quef.expln,qnum:data.dqnum + 1,diff:quef.diff});									
 						
 							});
 						
@@ -286,23 +287,22 @@ router.post('/post',verifyToken,(req,res)=>{
 
 							data.cqnum = -1;
 							data.cdiff = -1;
+							console.log("INC");
 							data.dqnum += 1;
 							data.start = new Date(0);
-							data.save().then(()=>{
+							data.save();
+							User.find({},{username:1,score:1,_id:0},{sort:{score:-1}},(err,uscore)=>{
 
-								User.find({},{username:1,score:1,_id:0},{sort:{score:-1}},(err,uscore)=>{
-	
-									if(err){
-	
-										console.log("Error Occured, While Fetching To Emit Score");
-										return;
-									}
-	
-									io.emit('score',uscore);
-							
-								});
-							
+								if(err){
+
+									console.log("Error Occured, While Fetching To Emit Score");
+									return;
+								}
+
+								io.emit('score',uscore);
+						
 							});
+							console.log(data);
 							return res.status(200).json({msg:"Success"});
 						
 						} 

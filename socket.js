@@ -138,12 +138,24 @@ const socketFunc = (io)=>{
 			var qnum;
 			if(diff == 1){
 
-				qnum = u.easyi;
+				if(u.easyi == 10){
+					qnum = u.medi;
+					diff = 2;
+				}
+				else{
+					qnum = u.easyi;
+				}
 
 			}
 			else if(diff == 2){
 
-				qnum = u.medi;
+				if(u.medi == 10){
+					qnum = u.medi;
+					diff = 3;
+				}
+				else{
+					qnum = u.medi;
+				}
 
 			}
 			else if(diff == 3){
@@ -203,7 +215,7 @@ const socketFunc = (io)=>{
 					// Update Question In Local Variables
 
 					if(diff == 1){
-
+						
 						uf.easyi += 1;
 						obju[username].easyi += 1;
 
@@ -274,6 +286,7 @@ module.exports = {
 		obju[username] += 1;
 	},
 	funcObjs : (username)=>{
+		console.log(username);
 		if(!obju[username]){
 			return false;
 		}

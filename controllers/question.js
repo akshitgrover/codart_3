@@ -200,9 +200,17 @@ router.post('/skip',verifyToken,(req,res)=>{
 
 		if(new Date() - data.start >= 60000 && data.start - new Date(0) != 0){
 
+			if(data.cdiff == 1){
+				data.score -= 20;
+			}
+			else if(data.cdiff == 2){
+				data.score -= 15;
+			}
+			else if(data.cdiff == 3){
+				data.score -= 10;
+			}
 			data.cqnum = -1;
 			data.cdiff = -1;
-			data.score -= 0.5;
 			data.dqnum += 1;
 			data.start = new Date(0);
 			data.save().then(()=>{
