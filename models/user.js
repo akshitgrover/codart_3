@@ -52,6 +52,10 @@ const model = new schema({
 	dqnum:{
 		type:'number',
 		default:0
+	},
+	skipc:{
+		type:'number',
+		defuakt:0
 	}
 },{minimize:false}
 );

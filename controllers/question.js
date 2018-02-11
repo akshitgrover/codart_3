@@ -196,6 +196,10 @@ router.post('/skip',verifyToken,(req,res)=>{
 			return res.status(200).json({msg:"Cannot Skip Buffer Question."});
 		}
 
+		if(data.skipc == 2){
+			return res.status(200).json({err:"Already Skipped Two Questions."});
+		}
+
 		// Checking Eligibility To Skip
 
 		if(new Date() - data.start >= 60000 && data.start - new Date(0) != 0){
@@ -212,6 +216,7 @@ router.post('/skip',verifyToken,(req,res)=>{
 			data.cqnum = -1;
 			data.cdiff = -1;
 			data.dqnum += 1;
+			data.skipc += 1;
 			data.start = new Date(0);
 			data.save().then(()=>{
 

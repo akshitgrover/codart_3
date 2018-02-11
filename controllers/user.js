@@ -228,8 +228,6 @@ router.post('/post',verifyToken,(req,res)=>{
 					var output = fs.readFileSync(que.testoutput,{encoding:'utf-8',flag:'r'});
 					output = output.replace("\r\n","\n");
 					
-					console.log(body.result.stdout);
-					console.log(JSON.stringify(output));
 					if(body.result.message == "Terminated due to timeout"){
 						data.save();
 						return res.status(200).json({msg:"Terminated due to timeout"});
@@ -264,7 +262,7 @@ router.post('/post',verifyToken,(req,res)=>{
 								}
 								data.start = new Date();
 								data.dqnum += 1;
-								console.log("INC");
+								data.skipc = 0;
 								data.save();
 								User.find({},{username:1,score:1,_id:0},{sort:{score:-1}},(err,uscore)=>{
 					
@@ -277,7 +275,6 @@ router.post('/post',verifyToken,(req,res)=>{
 									io.emit('score',uscore);
 						
 								});
-								console.log(data);
 								return res.status(200).json({stmt:quef.stmt,inputf:quef.inputf,outputf:quef.outputf,cnstr:quef.cnstr,sinput:quef.sinput,soutput:quef.soutput,expln:quef.expln,qnum:data.dqnum + 1,diff:quef.diff});									
 						
 							});
@@ -287,8 +284,8 @@ router.post('/post',verifyToken,(req,res)=>{
 
 							data.cqnum = -1;
 							data.cdiff = -1;
-							console.log("INC");
 							data.dqnum += 1;
+							data.skipc = 0;
 							data.start = new Date(0);
 							data.save();
 							User.find({},{username:1,score:1,_id:0},{sort:{score:-1}},(err,uscore)=>{
@@ -302,7 +299,6 @@ router.post('/post',verifyToken,(req,res)=>{
 								io.emit('score',uscore);
 						
 							});
-							console.log(data);
 							return res.status(200).json({msg:"Success"});
 						
 						} 
