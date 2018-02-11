@@ -58,9 +58,9 @@ router.post('/post',verifyToken,(req,res)=>{
 
 	// Check If Socket Is Connected
 
-	// if(!require('./../socket.js').funcObjs(ddata.payload.id)){
-	// 	return res.status(400).json({err:"Not Connected To The Server."});
-	// }
+	if(!require('./../socket.js').funcObjs(ddata.payload.id)){
+		return res.status(400).json({err:"Not Connected To The Server."});
+	}
 	
 	User.findOne({username:ddata.payload.id},(err,data)=>{
 
@@ -127,7 +127,7 @@ router.post('/post',verifyToken,(req,res)=>{
 			const extname = path.extname(req.files.code.path);
 			const pathFile = uploadPath + '/' + data.username + '_' + que.qnum.toString() + diffStr + '_' + (new Date()).getTime() + extname;
 			data.submissions.push(pathFile);
-			if(!data.submissionc[data.qnum]){
+			if(!data.submissionc[data.dqnum + 1]){
 	
 				data.submissionc[data.dqnum + 1] = 1;
 				console.log(data.submissionc);
@@ -219,6 +219,7 @@ router.post('/post',verifyToken,(req,res)=>{
 			
 					}
 					body = JSON.parse(body);
+					console.log(JSON.stringify(body.result.stdout[0]));
 					if(!body || !body.result){
 
 						return res.json({err:"Something Went Wrong."});
@@ -226,7 +227,8 @@ router.post('/post',verifyToken,(req,res)=>{
 					}
 
 					var output = fs.readFileSync(que.testoutput,{encoding:'utf-8',flag:'r'});
-					output = output.replace("\r\n","\n");
+					output = output.replace(/\r\n/g,"\n");
+					console.log(JSON.stringify(output));
 					
 					if(body.result.message == "Terminated due to timeout"){
 						data.save();

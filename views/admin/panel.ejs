@@ -30,7 +30,7 @@
 			<div class="jumbotron">
 			<center>
 			<h1>Add A Question</h1><br>
-				<form action="/question/create" method="post" target= "_blank" enctype="multipart/form-data">
+				<form id="submit" action="/question/create" method="post" target= "_blank" enctype="multipart/form-data">
 					<input type="text" name="qnum" placeholder="Number"><br><br>
 					<input type="text" name="diff" placeholder="Difficulty"><br><br>
 					<textarea name="stmt" placeholder="Statement"></textarea><br><br>
@@ -40,10 +40,11 @@
 					<textarea name="sinput" placeholder="Sample Input"></textarea><br><br>
 					<textarea name="soutput" placeholder="Sample Output"></textarea><br><br>
 					<textarea name="expln" placeholder="Explanation"></textarea><br><br>
-					Testoutput:<br><input type="file" name="testoutput"><br><br>
 					Testcase:<br><input type="file" name="testcase"><br><br>
+					Testoutput:<br><input type="file" name="testoutput"><br><br>
 					<input type="hidden" name= "token" value="<%=token%>">
 					<input type="submit">
+					<input type="reset">
 				</form>
 				<div id="msg" style="color:red;font-weight:bold;font-size:50px;align:center">
 
@@ -77,6 +78,12 @@
 				socket.emit('giveQuestion',username,diff,function(res){
 					document.getElementById('msg').innerHTML = res.err;
 				});	
+			}
+
+			function submitform(){
+				var form = document.getElementById('submit');
+				form.submit();
+				form.reset();
 			}
 
 		</script>
