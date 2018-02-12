@@ -10,7 +10,7 @@ ADD config.js /app
 
 ADD . /app
 
-VOLUME /uploads
+VOLUME /app/uploads
 
 EXPOSE 3000
 
