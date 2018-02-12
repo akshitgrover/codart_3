@@ -68,10 +68,12 @@ app.use('/admin',admin);
 
 const {mongoUrl} = require('./config.js');
 
+console.log(mongoUrl);
+
 mongoose.connect(mongoUrl,(err,db)=>{
 
 	if(err){
-	
+		console.log(err);
 		console.log("Error Connecting To MongoDb");
 		process.exit(1);
 	
