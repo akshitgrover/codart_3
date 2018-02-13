@@ -10,6 +10,7 @@ const Request = require('request');
 const path = require('path');
 const fs = require('fs');
 const bcrypt = require('bcrypt-nodejs');
+const adminPolicy = require('./../policies/adminPolicy.js');
 
 const User = require('./../models/user.js');
 const Question = require('./../models/question.js');
@@ -363,10 +364,22 @@ router.get('/score',verifyToken,(req,res)=>{
 });
 
 router.post('/create',(req,res)=>{
-	User.create({username:req.body.username,password:bcrypt.hashSync(req.body.password)},(err,data)=>{
-		console.log(err);
-		console.log(data);
-	});
+	var teams = ["half_boiled","wubba-lubba-dub-dub","bharath-team","aplhaomega","GDGVIT","TeamDecoder","Jishu-Dohare-Team","Brogrammers","gurkaran.sahni2016-Team","Utkarsh-Sharma-Team"];
+	for(var i = 0;i<teams.length;i++){
+		obj = {};
+		obj["username"] = teams[i];
+		obj["password"] = Math.floor(Math.random()*(7777 - 9999)) + 7777;
+		console.log(obj);
+		User.create(obj,(err,data)=>{
+			if(err){
+				console.log("Error Creating User");
+				return; 
+			}
+			console.log("Created");
+		});
+	}
+	return res.status(200).json({msg:"Users Created"});
+
 });
 
 module.exports = {
