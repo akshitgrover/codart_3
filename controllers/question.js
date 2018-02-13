@@ -115,6 +115,8 @@ router.get('/question',verifyToken,(req,res)=>{
 
 	var ddata = jwt.decodeToken(req.headers.authorization.split(' ')[1]);
 
+	console.log(ddata);
+
 	// Check If Socket Is Connected
 
 	if(!require('./../socket.js').funcObjs(ddata.payload.id)){

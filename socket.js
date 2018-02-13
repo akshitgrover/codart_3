@@ -136,14 +136,18 @@ const socketFunc = (io)=>{
 			// Find Question Number
 
 			var qnum;
+			console.log(u.easyi);
 			if(diff == 1){
 
-				if(u.easyi == 10){
+				if(u.easyi.length == 0){
 					qnum = u.medi;
 					diff = 2;
 				}
 				else{
-					qnum = u.easyi;
+					var idx = Math.floor(Math.random()*(0,u.easyi.length));
+					console.log(idx);
+					qnum = u.easyi[idx];
+					console.log(qnum);
 				}
 
 			}
@@ -213,11 +217,14 @@ const socketFunc = (io)=>{
 					console.log("Emitted Question: " + que.qnum + " Diff: " + que.diff + " For: " + username);
 					
 					// Update Question In Local Variables
+					console.log(diff);
 
 					if(diff == 1){
 						
-						uf.easyi += 1;
-						obju[username].easyi += 1;
+						var idx = uf.easyi.indexOf(que.qnum);
+						uf.easyi.splice(idx,1);
+						console.log(uf.easyi);
+						obju[username].easyi.splice(idx,1);
 
 					}
 					else if(diff == 2){

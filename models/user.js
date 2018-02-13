@@ -26,8 +26,8 @@ const model = new schema({
 		type:'array'
 	},
 	easyi:{
-		type:'number',
-		default:1
+		type:'array',
+		default:[1,2,3,4,5,6,7,8,9,10]
 	},
 	medi:{
 		type:'number',

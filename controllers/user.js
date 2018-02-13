@@ -42,10 +42,14 @@ router.post('/login',(req,res)=>{
 		
 		}
 
+		if(require('./../socket.js').funcObjs(req.body.username)){
+			return res.status(409).json({err:"Already A Session Exists."});
+		}
+
 		// Return Token: 
 
-		
 		return res.status(200).json({msg:"Logged in",token:jwt.issueToken({id:data.username},secret,"1d")});
+	
 	});
 
 });
@@ -219,7 +223,9 @@ router.post('/post',verifyToken,(req,res)=>{
 			
 					}
 					body = JSON.parse(body);
-					console.log(JSON.stringify(body.result.stdout[0]));
+					if(body.result.stdout){
+						console.log(JSON.stringify(body.result.stdout[0]));
+					}
 					if(!body || !body.result){
 
 						return res.json({err:"Something Went Wrong."});
