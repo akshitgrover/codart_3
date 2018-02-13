@@ -78,8 +78,8 @@ router.post('/create',adminPolicy,(req,res)=>{
 
 		// Upload TestCase File
 
-		const testcase = require('path').join(__dirname + "/../testcases/" + qnum.toString() + diffStr + '.txt');
-		const testoutput = require('path').join(__dirname + "/../testoutputs/" + qnum.toString() + diffStr + '.txt');
+		const testcase = require('path').join(__dirname + "/../uploads/testcases/" + qnum.toString() + diffStr + '.txt');
+		const testoutput = require('path').join(__dirname + "/../uploads/testoutputs/" + qnum.toString() + diffStr + '.txt');
 		const que = {qnum,stmt,inputf,outputf,sinput,soutput,expln,diff,testcase,testoutput,cnstr};
 		
 		// Create Question
@@ -94,8 +94,8 @@ router.post('/create',adminPolicy,(req,res)=>{
 
 			// Path For Uploaded File
 
-			const tupath = path.join(__dirname + '/../testcases/' + qnum + diffStr + '.txt');
-			const toupath = path.join(__dirname + '/../testoutputs/' + qnum + diffStr + '.txt');
+			const tupath = path.join(__dirname + '/../uploads/testcases/' + qnum + diffStr + '.txt');
+			const toupath = path.join(__dirname + '/../uploads/testoutputs/' + qnum + diffStr + '.txt');
 			fs.renameSync(req.files.testcase.path,tupath);
 			fs.renameSync(req.files.testoutput.path,toupath);
 

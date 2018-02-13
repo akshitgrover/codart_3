@@ -1,22 +1,28 @@
 version: "3"
 
 services:
+
   mongo:
     image: mongo:latest
+    deploy:
+      replicas: 2
     volumes:
       - codart_3_data:/data/db
       - codart_3_dataConfig:/data/configdb
       
-  node:
+  node1:
     image: akshitgrover/codart_3:v1
-    deploy:
-      replicas: 2
     volumes:
       - codart_3_uploads:/app/uploads
     ports:
       - "3000:3000"
-    links:
-      - mongo
+  
+  node2:
+    image: akshtigrover/codart_3:v1
+    volumes:
+      - codart_3_uploads:/app/uploads
+    ports:
+      - "3001:3000"
 
 volumes:
   codart_3_uploads:

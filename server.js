@@ -19,7 +19,7 @@ app.use(cors());
 // Parser Options
 
 app.use(bodyParser.json());
-app.use(multipart({uploadDir:path.join(__dirname + '/.tmp')}));
+app.use(multipart({uploadDir:path.join(__dirname + '/uploads')}));
 
 // Socket Definition
 
