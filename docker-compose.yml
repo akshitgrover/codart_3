@@ -18,11 +18,13 @@ services:
       - "3000:3000"
   
   node2:
-    image: akshtigrover/codart_3:v1
+    image: akshitgrover/codart_3:v1
+    environment:
+      - PORT=3001
     volumes:
       - codart_3_uploads:/app/uploads
     ports:
-      - "3001:3000"
+      - "3001:3001"
 
 volumes:
   codart_3_uploads:
