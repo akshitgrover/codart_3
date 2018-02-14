@@ -36,7 +36,7 @@ router.post('/login',(req,res)=>{
 		}
 
 		// Authorization Checker:
-
+		
 		if(!data || !bcrypt.compareSync(req.body.password,data.password)){
 		
 			return res.status(404).json({err:"Invalid Username/Password"});
@@ -375,6 +375,8 @@ router.post('/create',(req,res)=>{
 				console.log("Error Creating User");
 				return; 
 			}
+			data.password = bcrypt.hashSync(data.password);
+			data.save();
 			console.log("Created");
 		});
 	}
