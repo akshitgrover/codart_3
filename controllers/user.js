@@ -224,6 +224,7 @@ router.post('/post',verifyToken,(req,res)=>{
 			
 					}
 					body = JSON.parse(body);
+					console.log(body.result);
 					if(body.result.stdout){
 						console.log(JSON.stringify(body.result.stdout[0]));
 					}

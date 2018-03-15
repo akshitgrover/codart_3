@@ -204,7 +204,7 @@ router.post('/skip',verifyToken,(req,res)=>{
 
 		// Checking Eligibility To Skip
 
-		if(new Date() - data.start >= 60000 && data.start - new Date(0) != 0){
+		if(new Date() - data.start >= 600000 && data.start - new Date(0) != 0){
 
 			if(data.cdiff == 1){
 				data.score -= 20;
@@ -238,7 +238,7 @@ router.post('/skip',verifyToken,(req,res)=>{
 			return res.status(200).json({msg:"Contact Administrator For New Question.",flag:-1});
 
 		}
-		else if(new Date() - data.start < 60000){
+		else if(new Date() - data.start < 600000){
 
 			return res.status(200).json({msg:"Cannot Skip Right Now."});
 
