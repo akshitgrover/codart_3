@@ -4,8 +4,6 @@ services:
 
   mongo:
     image: mongo:latest
-    deploy:
-      replicas: 2
     volumes:
       - codart_3_data:/data/db
       - codart_3_dataConfig:/data/configdb
